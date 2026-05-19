@@ -25,15 +25,15 @@ Object oZoomJugador is a cWebView
     End_Object 
 
     Object oequipo_DD is a cequipoDataDictionary
-        Set DDO_Server To oliga_DD
+        Set DDO_Server to oliga_DD
     End_Object 
 
     Object ojugador_DD is a cjugadorDataDictionary
-        Set DDO_Server To oequipo_DD
+        Set DDO_Server to oequipo_DD
     End_Object 
 
-    Set Main_DD To ojugador_DD
-    Set Server  To ojugador_DD
+    Set Main_DD to ojugador_DD
+    Set Server  to ojugador_DD
 
 
     Object oWebMainPanel is a cWebPanel
@@ -63,9 +63,6 @@ Object oZoomJugador is a cWebView
             Set peLabelPosition to lpTop
             Set psLabel to "Nombre"
             Set pbPromptButton to True
-
-// ToDo: Fill in the from-child parent Select view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oSelectView
 
             Procedure OnPrompt
                 Send NavigatePath
@@ -115,6 +112,25 @@ Object oZoomJugador is a cWebView
             End_Procedure
 
         End_Object 
+
+        Object oVerPosicionesBtn is a cWebMenuItem
+            Set psCSSClass to "WebButtonIcon WebIcon_Info"
+            Set psCaption to "Ver posiciones"
+
+            WebRegisterPath ntNavigateForward oSelectPosicion
+
+            Procedure OnClick
+                Send NavigatePath
+            End_Procedure
+
+            Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
+                Move True to NavigateData.bReadOnly
+                Get NamedValueAdd NavigateData.NamedValues "NombreJugador" (jugador.Nombre) to NavigateData.NamedValues
+                Get NamedValueAdd NavigateData.NamedValues "ApellidoJugador" (jugador.Apellido) to NavigateData.NamedValues
+            End_Procedure
+
+        End_Object 
+
     End_Object 
 
     Procedure SetActionButtons
@@ -131,6 +147,7 @@ Object oZoomJugador is a cWebView
         WebSet pbRender of oSaveBtn to False
         WebSet pbRender of oCancelChangesBtn to False
         WebSet pbRender of oDeleteBtn to False
+        WebSet pbRender of oVerPosicionesBtn to False
 
         If (NavigateData.bReadOnly) Begin
             WebSet pbRender of oEditBtn to True
@@ -140,14 +157,14 @@ Object oZoomJugador is a cWebView
             WebSet pbRender of oCancelChangesBtn to True
             WebSet pbRender of oDeleteBtn to bHasRecord
         End
+
+        WebSet pbRender of oVerPosicionesBtn to bHasRecord
     End_Procedure
 
     Procedure OnViewSaved Handle hoServer Boolean bChanged
-        // Close after save
         Send NavigateClose Self
     End_Procedure
 
-    // this will close the view after a delete
     Procedure OnViewDeleted Handle hoDDO
         Send NavigateClose Self
     End_Procedure
@@ -155,18 +172,19 @@ Object oZoomJugador is a cWebView
     Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
         Case Begin
             Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a propbably a main file Select to Zoom.
+                Send ShowInfoBox "Vengo desde el Select de la misma tabla (Main)" "From Main - ZoomJugador"
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down.
+                Send ShowInfoBox "Vengo desde una tabla padre (Parent)" "From Parent - ZoomJugador"
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent Zoom from a Zoom.
+                Send ShowInfoBox "Vengo desde una tabla hija (Child)" "From Child - ZoomJugador"
                 Case Break
 
             Case Else // must be nfUndefined
+                Send ShowInfoBox "Navegación sin relación entre tablas (Undefined)" "Undefined - ZoomJugador"
 
         Case End
 
@@ -174,4 +192,4 @@ Object oZoomJugador is a cWebView
 
     End_Procedure
 
-End_Object 
+End_Object

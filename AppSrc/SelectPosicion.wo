@@ -22,8 +22,8 @@ Object oSelectPosicion is a cWebView
     Object oposicion_DD is a cposicionDataDictionary
     End_Object 
 
-    Set Main_DD To oposicion_DD
-    Set Server  To oposicion_DD
+    Set Main_DD to oposicion_DD
+    Set Server  to oposicion_DD
 
 
     Object oList is a cWebList
@@ -49,9 +49,6 @@ Object oSelectPosicion is a cWebView
             Set psBtnCssClass to "WebButtonIcon WebIcon_Info"
             Set peAlign to alignRight
 
-// ToDo: Fill in the from-main Zoom view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oZoomView
-
             Procedure OnClick
                 Send NavigatePath
             End_Procedure
@@ -62,18 +59,12 @@ Object oSelectPosicion is a cWebView
 
         End_Object 
 
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-//        WebRegisterPath ntNavigateForward oSelectView
-
         Procedure OnRowClick String sRowId
             tWebNavigateData NavigateData
             Get GetNavigateData to NavigateData
 
             Case Begin
                 Case (NavigateData.eNavigateType = nfFromParent)
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-//                    Send NavigateForward of oSelectView Self
                     Case Break
 
                 Case (NavigateData.eNavigateType = nfFromChild)
@@ -85,9 +76,6 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
                     Case Break
 
                 Case Else // must be nfUndefined
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-//                    Send NavigateForward of oSelectView Self
 
             Case End
         End_Procedure
@@ -114,9 +102,6 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
             Set psCSSClass to "WebClearMenuItem"
             Set psCaption to "New"
 
-// ToDo: Fill in the from-main Zoom view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oZoomView
-
             Procedure OnClick
                 Send NavigatePath
             End_Procedure
@@ -129,29 +114,37 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
     End_Object 
 
     Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
+        String sNombreJugador
+        String sApellidoJugador
+        String sMensaje
+
         WebSet pbRender of oNewButton to True
         WebSet pbRender of oDetailButton to True
 
         Case Begin
             Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down
+                Send ShowInfoBox "Vengo desde una tabla padre (Parent)" "From Parent - SelectPosicion"
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent lookup from a Zoom
+                Send ShowInfoBox "Vengo desde una tabla hija (Child)" "From Child - SelectPosicion"
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a probably a main-file lookup from a Zoom
+                Send ShowInfoBox "Vengo desde el Select de la misma tabla (Main)" "From Main - SelectPosicion"
                 WebSet pbRender of oDetailButton to False
                 Case Break
 
             Case Else // must be nfUndefined
-                // This may be the start of a drilldown query or this may be used for some kind of custom query.
+                Get NamedValueGet NavigateData.NamedValues "NombreJugador" to sNombreJugador
+                Get NamedValueGet NavigateData.NamedValues "ApellidoJugador" to sApellidoJugador
+
+                Move ("Vengo desde Jugador: " + sNombreJugador + " " + sApellidoJugador) to sMensaje
+                Send ShowInfoBox sMensaje "Undefined - SelectPosicion (NameValues)"
 
         Case End
 
     End_Procedure
 
 
-End_Object 
+End_Object
