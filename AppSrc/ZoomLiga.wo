@@ -56,7 +56,7 @@ Object oZoomLiga is a cWebView
             Procedure OnClick
                 Send Request_Save
             End_Procedure
-
+    
         End_Object 
 
         Object oEditBtn is a cWebMenuItem
@@ -89,6 +89,22 @@ Object oZoomLiga is a cWebView
             End_Procedure
 
         End_Object 
+        
+                Object oVerEquiposBtn is a cWebMenuItem
+            Set psCSSClass to "WebButtonIcon WebIcon_Info"
+            Set psCaption to "Ver equipos"
+           
+
+            WebRegisterPath ntNavigateForward oSelectEquipo
+
+            Procedure OnClick
+                Send NavigatePath
+            End_Procedure
+
+        End_Object
+        
+        
+        
     End_Object 
 
     Procedure SetActionButtons
@@ -105,6 +121,7 @@ Object oZoomLiga is a cWebView
         WebSet pbRender of oSaveBtn to False
         WebSet pbRender of oCancelChangesBtn to False
         WebSet pbRender of oDeleteBtn to False
+        WebSet pbRender of oVerEquiposBtn to False
 
         If (NavigateData.bReadOnly) Begin
             WebSet pbRender of oEditBtn to True
@@ -114,6 +131,8 @@ Object oZoomLiga is a cWebView
             WebSet pbRender of oCancelChangesBtn to True
             WebSet pbRender of oDeleteBtn to bHasRecord
         End
+        
+         WebSet pbRender of oVerEquiposBtn to bHasRecord
     End_Procedure
 
     Procedure OnViewSaved Handle hoServer Boolean bChanged
