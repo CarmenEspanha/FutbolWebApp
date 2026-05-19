@@ -24,11 +24,11 @@ Object oZoomEquipo is a cWebView
     End_Object 
 
     Object oequipo_DD is a cequipoDataDictionary
-        Set DDO_Server To oliga_DD
+        Set DDO_Server to oliga_DD
     End_Object 
 
-    Set Main_DD To oequipo_DD
-    Set Server  To oequipo_DD
+    Set Main_DD to oequipo_DD
+    Set Server  to oequipo_DD
 
 
     Object oWebMainPanel is a cWebPanel
@@ -50,9 +50,6 @@ Object oZoomEquipo is a cWebView
             Set peLabelPosition to lpTop
             Set psLabel to "Nombre"
             Set pbPromptButton to True
-
-// ToDo: Fill in the from-child parent Select view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oSelectView
 
             Procedure OnPrompt
                 Send NavigatePath
@@ -102,6 +99,19 @@ Object oZoomEquipo is a cWebView
             End_Procedure
 
         End_Object 
+
+        Object oVerLigaBtn is a cWebMenuItem
+            Set psCSSClass to "WebButtonIcon WebIcon_Info"
+            Set psCaption to "Ver liga"
+
+            WebRegisterPath ntNavigateForward oSelectLiga
+
+            Procedure OnClick
+                Send NavigatePath
+            End_Procedure
+
+        End_Object 
+
     End_Object 
 
     Procedure SetActionButtons
@@ -113,11 +123,11 @@ Object oZoomEquipo is a cWebView
         Get GetNavigateData to NavigateData
         Get HasRecord of hoDD to bHasRecord
 
-        // let's hide all buttons and then Show the ones we want
         WebSet pbRender of oEditBtn to False
         WebSet pbRender of oSaveBtn to False
         WebSet pbRender of oCancelChangesBtn to False
         WebSet pbRender of oDeleteBtn to False
+        WebSet pbRender of oVerLigaBtn to False
 
         If (NavigateData.bReadOnly) Begin
             WebSet pbRender of oEditBtn to True
@@ -127,14 +137,14 @@ Object oZoomEquipo is a cWebView
             WebSet pbRender of oCancelChangesBtn to True
             WebSet pbRender of oDeleteBtn to bHasRecord
         End
+
+        WebSet pbRender of oVerLigaBtn to bHasRecord
     End_Procedure
 
     Procedure OnViewSaved Handle hoServer Boolean bChanged
-        // Close after save
         Send NavigateClose Self
     End_Procedure
 
-    // this will close the view after a delete
     Procedure OnViewDeleted Handle hoDDO
         Send NavigateClose Self
     End_Procedure
@@ -142,18 +152,19 @@ Object oZoomEquipo is a cWebView
     Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
         Case Begin
             Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a propbably a main file Select to Zoom.
+                Send ShowInfoBox "Vengo desde el Select de la misma tabla (Main)" "From Main - ZoomEquipo"
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down.
+                Send ShowInfoBox "Vengo desde una tabla padre (Parent)" "From Parent - ZoomEquipo"
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent Zoom from a Zoom.
+                Send ShowInfoBox "Vengo desde una tabla hija (Child)" "From Child - ZoomEquipo"
                 Case Break
 
             Case Else // must be nfUndefined
+                Send ShowInfoBox "Navegación sin relación entre tablas (Undefined)" "Undefined - ZoomEquipo"
 
         Case End
 
@@ -161,4 +172,4 @@ Object oZoomEquipo is a cWebView
 
     End_Procedure
 
-End_Object 
+End_Object
