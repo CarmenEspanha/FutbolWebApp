@@ -49,6 +49,8 @@ Object oSelectPosicion is a cWebView
             Set psBtnCssClass to "WebButtonIcon WebIcon_Info"
             Set peAlign to alignRight
 
+            WebRegisterPath ntNavigateForward oZoomPosicion
+
             Procedure OnClick
                 Send NavigatePath
             End_Procedure
@@ -101,6 +103,8 @@ Object oSelectPosicion is a cWebView
         Object oNewButton is a cWebMenuItem
             Set psCSSClass to "WebClearMenuItem"
             Set psCaption to "New"
+
+            WebRegisterPath ntNavigateForward oZoomPosicion
 
             Procedure OnClick
                 Send NavigatePath

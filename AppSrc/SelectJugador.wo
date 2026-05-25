@@ -144,16 +144,20 @@ Object oSelectJugador is a cWebView
 
         Case Begin
             Case (NavigateData.eNavigateType = nfFromParent)
+                Send ShowInfoBox "Vengo desde una tabla padre (Parent)" "From Parent - SelectJugador"
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
+                Send ShowInfoBox "Vengo desde una tabla hija (Child)" "From Child - SelectJugador"
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromMain)
+                Send ShowInfoBox "Vengo desde el Select de la misma tabla (Main)" "From Main - SelectJugador"
                 WebSet pbRender of oDetailButton to False
                 Case Break
 
             Case Else // must be nfUndefined
+                Send ShowInfoBox "Navegación sin relación entre tablas (Undefined)" "Undefined - SelectJugador"
 
         Case End
 

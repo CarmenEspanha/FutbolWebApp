@@ -64,9 +64,14 @@ Object oZoomJugador is a cWebView
             Set psLabel to "Nombre"
             Set pbPromptButton to True
 
+
+         WebRegisterPath ntNavigateForward oSelectEquipo
             Procedure OnPrompt
                 Send NavigatePath
             End_Procedure
+            
+           
+            
         End_Object 
     End_Object 
 

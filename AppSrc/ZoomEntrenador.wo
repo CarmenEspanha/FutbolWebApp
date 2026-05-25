@@ -64,8 +64,7 @@ Object oZoomEntrenador is a cWebView
             Set psLabel to "Nombre"
             Set pbPromptButton to True
 
-// ToDo: Fill in the from-child parent Select view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oSelectView
+WebRegisterPath ntNavigateForward oSelectEquipo
 
             Procedure OnPrompt
                 Send NavigatePath
@@ -152,26 +151,27 @@ Object oZoomEntrenador is a cWebView
         Send NavigateClose Self
     End_Procedure
 
-    Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
-        Case Begin
-            Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a propbably a main file Select to Zoom.
-                Case Break
+   Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
+    Case Begin
+        Case (NavigateData.eNavigateType = nfFromMain)
+            Send ShowInfoBox "Vengo desde el Select de la misma tabla (Main)" "From Main - ZoomEntrenador"
+            Case Break
 
-            Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down.
-                Case Break
+        Case (NavigateData.eNavigateType = nfFromParent)
+            Send ShowInfoBox "Vengo desde una tabla padre (Parent)" "From Parent - ZoomEntrenador"
+            Case Break
 
-            Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent Zoom from a Zoom.
-                Case Break
+        Case (NavigateData.eNavigateType = nfFromChild)
+            Send ShowInfoBox "Vengo desde una tabla hija (Child)" "From Child - ZoomEntrenador"
+            Case Break
 
-            Case Else // must be nfUndefined
+        Case Else // must be nfUndefined
+            Send ShowInfoBox "Navegación sin relación entre tablas (Undefined)" "Undefined - ZoomEntrenador"
 
-        Case End
+    Case End
 
-        Send SetActionButtons
+    Send SetActionButtons
 
-    End_Procedure
+End_Procedure 
 
 End_Object 
